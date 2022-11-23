@@ -1,3 +1,7 @@
+import QueryStream from 'pg-query-stream';
+
+export {QueryStream};
+
 export {IQueryStreamConfig, IField} from './types';
 export {QueryIterable} from './base';
 export {QueryIterableClient} from './from-client';

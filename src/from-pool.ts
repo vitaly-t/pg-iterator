@@ -20,11 +20,9 @@ export class QueryIterablePool<T> extends QueryIterable<T> {
         const i: AsyncIterator<T> = qs[Symbol.asyncIterator]();
         let client: IClientLike;
         qs.once('end', () => {
-            this.emit('end');
             client.release();
         });
         qs.once('error', (err) => {
-            this.emit('error', err);
             client.release();
         });
         return {

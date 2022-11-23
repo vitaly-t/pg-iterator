@@ -7,10 +7,9 @@ import {IField} from './types';
  *
  * Provides columns details (field descriptors) from a query stream.
  *
- * Supports the following events:
- *  - `fields`: fields information for the current query is available;
- *  - `error`: query execution threw an error;
- *  - `end`: query streaming has finished.
+ * Supported events:
+ *  - `fields`: provides details about fields from the query;
+ *  - `stream`: notifies of a new stream is created.
  */
 export abstract class QueryIterable<T> extends EventEmitter {
 
@@ -23,13 +22,6 @@ export abstract class QueryIterable<T> extends EventEmitter {
     fields: Array<IField> = [];
 
     /**
-     * Stream object that corresponds to the last run query.
-     *
-     * It is `undefined` before the very first query.
-     */
-    stream: QueryStream;
-
-    /**
      * Generic query method, to be implemented in every derived class.
      */
     abstract query(text: string, values?: any[]): AsyncIterable<T>;
@@ -38,14 +30,14 @@ export abstract class QueryIterable<T> extends EventEmitter {
      * Patches a query stream to provide column information.
      */
     protected attachStream(qs: QueryStream): void {
-        this.stream = qs;
         this.fields.length = 0;
         const handler = qs.handleRowDescription;
         qs.handleRowDescription = (msg: { fields: IField[] }) => {
             handler(msg); // call the previous handler
             this.fields.push(...msg.fields); // clone-copy the fields
             qs.handleRowDescription = handler; // restore the handler
-            this.emit('fields', this.fields); // provide notification
+            this.emit('fields', this.fields);
         }
+        this.emit('stream', qs);
     }
 }
