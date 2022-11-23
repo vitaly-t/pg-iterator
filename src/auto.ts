@@ -1,7 +1,8 @@
-import {IClientLike, IPoolLike, IQueryStreamConfig} from './types';
+import {IQueryStreamConfig} from './types';
 import {QueryIterablePool} from './from-pool';
 import {QueryIterableClient} from './from-client';
 import {QueryIterable} from './base';
+import {IClientLike, IPoolLike} from './drivers';
 
 /**
  * Automatically determines and instantiates the right driver.
