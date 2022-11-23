@@ -1,1 +1,1 @@
-# pg-iterable
+# pg-iterator
