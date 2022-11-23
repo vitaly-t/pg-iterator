@@ -172,6 +172,30 @@ for await (const a of r) {
 }
 ```
 
+Note that if iteration is incomplete because you interrupted the iteration loop,
+or used some limiting operators (like `take` above), the connection will remain
+open indefinitely. In such cases you may want to force-release the connection,
+by calling method `release` of [QueryIterable] manually:
+
+```ts
+import {from, take} from 'rxjs';
+
+const q = new QueryIterablePool(pool);
+
+const i = q.query('SELECT * FROM users WHERE id = $1', [123]);
+
+from(d).pipe(take(2)).subscribe({
+    next(row) {
+        console.log(row);
+    },
+    complete() {
+        // since we use "take" above, the iteration will be incomplete,
+        // and the connection will be stuck, so we have to force-release it: 
+        q.release(); 
+    }
+});
+```
+
 [Database.$pool]:http://vitaly-t.github.io/pg-promise/Database.html#$pool
 
 [node-postgres]:https://github.com/brianc/node-postgres
