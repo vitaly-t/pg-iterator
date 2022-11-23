@@ -196,6 +196,16 @@ from(i).pipe(take(10)).subscribe({
 });
 ```
 
+Alternatively, you can wrap [QueryIterablePool] + query into a safe `Observable` creator:
+
+```ts
+function fromQuery<T>(qi: QueryIterable<T>, text: string, params?: any[]): Observable<T> {
+    return from(qi.query(text, params)).pipe(finalize(() => {
+        qi.release();
+    }));
+}
+```
+
 [Database.$pool]:http://vitaly-t.github.io/pg-promise/Database.html#$pool
 
 [node-postgres]:https://github.com/brianc/node-postgres
