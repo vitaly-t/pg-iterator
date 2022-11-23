@@ -7,7 +7,7 @@ TypeScript wrapper for [pg-query-stream], to produce safe, strongly-typed `Async
 When using an existing [Pool] object, this library will automatically acquire the connection,
 create `AsyncIterable` from a `query` and release the connection once the stream has depleted.
 
-Class `QueryIterablePool` implements such functionality.
+Class [QueryIterablePool] implements such functionality.
 
 ```ts
 import {Pool} from 'pg';
@@ -26,7 +26,7 @@ for await(const u of i) {
 
 ### Using `Client`
 
-The library can use a connected [Client] object directly, using `QueryIterableClient` class:
+The library can use a connected [Client] object directly, using [QueryIterableClient] class:
 
 ```ts
 import {Pool, Client} from 'pg';
@@ -46,8 +46,8 @@ for await(const u of i) {
 
 ### Using unknown driver
 
-When you do not know whether the source is a [Pool] or [Client], you can use function `createQueryIterable` instead,
-which will check the type at run-time, and return either `QueryIterablePool` or `QueryIterableClient`,
+When you do not know whether the source is a [Pool] or [Client], you can use function [createQueryIterable] instead,
+which will check the type at run-time, and return either [QueryIterablePool] or [QueryIterableClient],
 which share generic protocol.
 
 [pg-query-stream]:https://www.npmjs.com/package/pg-query-stream
@@ -55,3 +55,9 @@ which share generic protocol.
 [Pool]:https://node-postgres.com/apis/pool
 
 [Client]:https://node-postgres.com/apis/client
+
+[QueryIterablePool]:https://github.com/vitaly-t/pg-iterator/blob/main/src/from-pool.ts
+
+[QueryIterableClient]:https://github.com/vitaly-t/pg-iterator/blob/main/src/from-client.ts
+
+[createQueryIterable]:https://github.com/vitaly-t/pg-iterator/blob/main/src/auto.ts
