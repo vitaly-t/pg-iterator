@@ -1,11 +1,12 @@
 import {IClient, IPool, IQueryStreamConfig} from './types';
 import {QueryIterablePool} from './from-pool';
 import {QueryIterableClient} from './from-client';
+import {QueryIterable} from './base';
 
 /**
- * Automatically determines the type of driver, and creates the corresponding class instance.
+ * Automatically determines and instantiates the right driver.
  */
-export function createQueryIterable(driver: IPool | IClient, config?: IQueryStreamConfig) {
+export function createQueryIterable<T>(driver: IPool | IClient, config?: IQueryStreamConfig): QueryIterable<T> {
     if (typeof driver['connect'] === 'function') {
         return new QueryIterablePool(driver as IPool, config);
     }

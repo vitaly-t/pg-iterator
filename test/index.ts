@@ -7,10 +7,16 @@ const cn = {
     allowExitOnIdle: true
 };
 
+interface IUser {
+    id: number;
+    name: string;
+}
+
 const pool = new Pool(cn);
 
 (async function () {
-    const q = createQueryIterable(pool);
+
+    const q = createQueryIterable<IUser>(pool);
 
     let started;
 
@@ -20,7 +26,7 @@ const pool = new Pool(cn);
 
     try {
         for await(const a of q.query('SELECT * FROM users')) {
-            console.log(a);
+            console.log(a.name);
         }
     } catch (err) {
         console.log('HANDLED:', err);
