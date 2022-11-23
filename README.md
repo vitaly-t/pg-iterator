@@ -154,7 +154,7 @@ import {from, take} from 'rxjs';
 const i = q.query('SELECT * FROM users WHERE id = $1', [123]);
 
 from(i).pipe(take(10)).subscribe(row => {
-    console.log(row);
+    console.log(row); // up to 10 rows
 });
 ```
 
@@ -184,12 +184,12 @@ const q = new QueryIterablePool(pool);
 
 const i = q.query('SELECT * FROM users WHERE id = $1', [123]);
 
-from(d).pipe(take(2)).subscribe({
+from(i).pipe(take(2)).subscribe({
     next(row) {
         console.log(row);
     },
     complete() {
-        // since we use "take" above, the iteration will be incomplete,
+        // since we use "take(10)" above, the iteration may be incomplete,
         // and the connection will be stuck, so we have to force-release it: 
         q.release();
     }
