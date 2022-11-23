@@ -78,14 +78,16 @@ const q = new QueryIterablePool(pool);
 
 const i = q.query('SELECT * FROM users WHERE id = $1', [123]);
 
+// q.fields is empty at this point
+
 for await(const u of i) {
-    const {fields} = q; // it is available at this point
+    const {fields} = q; // fields details are available at this point
     
     console.log(u); // output each row
 }
 ```
 
-* Or you can get a notification event `fields` instead:
+* Or you can use notification event `fields` instead:
 
 ```ts
 const q = new QueryIterablePool(pool);
