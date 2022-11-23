@@ -184,7 +184,7 @@ const q = new QueryIterablePool(pool);
 
 const i = q.query('SELECT * FROM users WHERE id = $1', [123]);
 
-from(i).pipe(take(2)).subscribe({
+from(i).pipe(take(10)).subscribe({
     next(row) {
         console.log(row);
     },
