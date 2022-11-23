@@ -196,7 +196,7 @@ from(i).pipe(take(10)).subscribe({
 });
 ```
 
-Alternatively, you can wrap [QueryIterablePool] + query into a safe `Observable` creator:
+Alternatively, you can wrap [QueryIterable] + query into a safe `Observable` creator:
 
 ```ts
 function fromQuery<T>(qi: QueryIterable<T>, text: string, params?: any[]): Observable<T> {
