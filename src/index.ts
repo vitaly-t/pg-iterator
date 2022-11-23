@@ -1,9 +1,5 @@
-import {Readable} from "stream";
+import Pool from 'pg-pool';
 import {QueryIterable} from "./disconnected";
-
-const pg = require('pg');
-
-const QueryStream = require('pg-query-stream')
 
 const cn = {
     database: 'pg-promise-demo',
@@ -11,11 +7,13 @@ const cn = {
     allowExitOnIdle: true
 };
 
-const pool = new pg.Pool(cn);
+const pool = new Pool(cn);
 
 (async function () {
     const q = new QueryIterable(pool);
     for await(const a of q.query('SELECT * FROM users')) {
         console.log(a);
     }
+
+    console.log('fields:', q.fields);
 })();

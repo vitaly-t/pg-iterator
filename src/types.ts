@@ -1,4 +1,5 @@
 import QueryStream from 'pg-query-stream';
+import {EventEmitter} from "events";
 
 export interface IQueryStreamConfig {
     batchSize?: number
@@ -19,9 +20,10 @@ export interface IField {
 
 export interface IClient {
     query<T>(qs: QueryStream): QueryStream;
+
     release();
 }
 
 export interface IPool {
-
+    connect(): Promise<IClient>;
 }

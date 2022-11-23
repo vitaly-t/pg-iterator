@@ -8,9 +8,9 @@ export class QueryIterableConnected<T> extends IteratorBase {
     }
 
     query(text: string, values?: any[]): AsyncIterable<T> {
-        const q = new QueryStream(text, values, this.config);
-        this.attach(q);
-        return this.client.query(q);
+        const qs = new QueryStream(text, values, this.config);
+        this.attach(qs);
+        return this.client.query(qs);
     }
 
 }

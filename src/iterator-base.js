@@ -1,4 +1,7 @@
-export class IteratorBase {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.IteratorBase = void 0;
+class IteratorBase {
     constructor() {
         this.fields = [];
     }
@@ -11,3 +14,4 @@ export class IteratorBase {
         };
     }
 }
+exports.IteratorBase = IteratorBase;
