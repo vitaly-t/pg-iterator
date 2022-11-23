@@ -1,10 +1,10 @@
 import {QueryIterable} from './base';
-import {IClient, IPool, IQueryStreamConfig} from './types';
+import {IClientLike, IPoolLike, IQueryStreamConfig} from './types';
 import QueryStream from 'pg-query-stream';
 
 export class QueryIterablePool<T> extends QueryIterable<T> {
 
-    constructor(private pool: IPool, private config?: IQueryStreamConfig) {
+    constructor(private pool: IPoolLike, private config?: IQueryStreamConfig) {
         super();
     }
 
@@ -13,7 +13,7 @@ export class QueryIterablePool<T> extends QueryIterable<T> {
         const qs = new QueryStream(text, values, config);
         this.attachStream(qs);
         const i: AsyncIterator<T> = qs[Symbol.asyncIterator]();
-        let client: IClient;
+        let client: IClientLike;
         qs.on('end', () => {
             client.release();
         });

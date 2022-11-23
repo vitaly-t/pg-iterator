@@ -1,9 +1,9 @@
 import QueryStream from 'pg-query-stream';
-import {IClient, IQueryStreamConfig} from './types';
+import {IClientLike, IQueryStreamConfig} from './types';
 import {QueryIterable} from './base';
 
 export class QueryIterableClient<T> extends QueryIterable<T> {
-    constructor(private client: IClient, private config?: IQueryStreamConfig) {
+    constructor(private client: IClientLike, private config?: IQueryStreamConfig) {
         super();
     }
 

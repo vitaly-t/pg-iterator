@@ -1,5 +1,5 @@
 import Pool from 'pg-pool';
-import {createQueryIterable, QueryIterablePool} from '../src';
+import {createQueryIterable} from '../src';
 
 const cn = {
     database: 'pg-promise-demo',
@@ -16,18 +16,20 @@ const pool = new Pool(cn);
 
 (async function () {
 
-    const q = createQueryIterable<IUser>(pool);
+    const client = await pool.connect();
+    const q = createQueryIterable<IUser>(client);
 
     let started;
 
     q.on('fields', fields => {
-        console.log('F:', fields);
+        // console.log('F:', fields);
     });
 
     try {
         for await(const a of q.query('SELECT * FROM users')) {
-            console.log(a.name);
+            console.log(a);
         }
+        client.release();
     } catch (err) {
         console.log('HANDLED:', err);
     }

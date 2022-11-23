@@ -17,12 +17,12 @@ export interface IField {
     format: string
 }
 
-export interface IClient {
+export interface IClientLike {
     query<T>(qs: QueryStream): QueryStream;
 
     release();
 }
 
-export interface IPool {
-    connect(): Promise<IClient>;
+export interface IPoolLike {
+    connect(): Promise<IClientLike>;
 }
