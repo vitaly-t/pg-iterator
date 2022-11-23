@@ -7,6 +7,8 @@ TypeScript wrapper for [pg-query-stream], to produce safe, strongly-typed `Async
 When using an existing [Pool] object, this library will automatically acquire the connection,
 create `AsyncIterable` from a `query` and release the connection once the stream has depleted.
 
+Class `QueryIterablePool` implements such functionality.
+
 ```ts
 import {Pool} from 'pg';
 import {QueryIterablePool} from 'pg-iterator';
@@ -24,7 +26,7 @@ for await(const u of i) {
 
 ### Using `Client`
 
-The library can use a connected [Client] object directly:
+The library can use a connected [Client] object directly, using `QueryIterableClient` class:
 
 ```ts
 import {Pool, Client} from 'pg';
