@@ -13,25 +13,38 @@ export class QueryIterablePool<T> extends QueryIterable<T> {
         super();
     }
 
+    private client: IClientLike;
+
+    /**
+     * Forces release of the current connection.
+     */
+    release(): boolean {
+        if (this.client) {
+            this.client.release();
+            this.client = null;
+            return true;
+        }
+        return false;
+    }
+
     query(text: string, values?: Array<any>): AsyncIterable<T> {
-        const {pool, config} = this;
-        const qs = new QueryStream(text, values, config);
+        const self = this;
+        const qs = new QueryStream(text, values, self.config);
         this.attachStream(qs);
         const i: AsyncIterator<T> = qs[Symbol.asyncIterator]();
-        let client: IClientLike;
         qs.once('end', () => {
-            client.release();
+            self.release();
         });
         qs.once('error', (err) => {
-            client.release();
+            self.release();
         });
         return {
             [Symbol.asyncIterator](): AsyncIterator<T> {
                 return {
                     next(): Promise<IteratorResult<T>> {
-                        return client ? i.next() : pool.connect().then(c => {
-                            client = c;
-                            client.query(qs);
+                        return self.client ? i.next() : self.pool.connect().then(c => {
+                            self.client = c;
+                            c.query(qs);
                             return i.next();
                         });
                     }

@@ -12,6 +12,17 @@ export class QueryIterableClient<T> extends QueryIterable<T> {
         super();
     }
 
+    /**
+     * Forces release of the current connection.
+     */
+    release(): boolean {
+        if (this.client) {
+            this.client.release();
+            return true;
+        }
+        return false;
+    }
+
     query(text: string, values?: Array<any>): AsyncIterable<T> {
         const qs = new QueryStream(text, values, this.config);
         this.attachStream(qs);

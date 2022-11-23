@@ -27,6 +27,11 @@ export abstract class QueryIterable<T> extends EventEmitter {
     abstract query(text: string, values?: Array<any>): AsyncIterable<T>;
 
     /**
+     * Forces release of the current connection.
+     */
+    abstract release(): boolean;
+
+    /**
      * Patches a query stream to provide column information.
      */
     protected attachStream(qs: QueryStream): void {
