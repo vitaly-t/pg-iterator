@@ -1,4 +1,4 @@
-export {IQueryStreamConfig, IField, IClientLike, IPoolLike} from './types';
+export {IQueryStreamConfig, IField} from './types';
 export {QueryIterable} from './base';
 export {QueryIterableClient} from './from-client';
 export {QueryIterablePool} from './from-pool';

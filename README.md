@@ -2,8 +2,8 @@
 
 TypeScript wrapper for [pg-query-stream], to produce safe, strongly-typed `AsyncIterable`-s.
 
-It offers an asynchronous way to stream data, row-by-row, which you can handle either natively (
-via `for await ()`) or an iterable library of your choice, like RxJs etc.
+It offers an asynchronous way to stream data, row-by-row, which you can handle either natively (via `for await`)
+or an iterable library of your choice, like RxJs etc.
 
 ## Installation
 
@@ -14,7 +14,7 @@ $ npm i pg-iterator
 ## Usage
 
 You have the flexibility of using this module with [Pool] or [Client], or a dynamically-determined type,
-via [createQueryIterable] function. 
+via [createQueryIterable] function.
 
 Each of the interfaces - [QueryIterablePool], [QueryIterableClient] or [createQueryIterable] supports
 strong-type parametrization, for typed row iteration.
@@ -66,7 +66,6 @@ for await(const u of i) {
 When you do not know whether the source is a [Pool] or [Client], you can use function [createQueryIterable] instead,
 which will check the type at run-time, and return either [QueryIterablePool] or [QueryIterableClient],
 which share generic [QueryIterable] protocol.
-
 
 
 [pg-query-stream]:https://www.npmjs.com/package/pg-query-stream
