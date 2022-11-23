@@ -1,6 +1,6 @@
 {
   "name": "pg-iterator",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "wrapper for pg-query-stream",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

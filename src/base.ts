@@ -23,6 +23,13 @@ export abstract class QueryIterable<T> extends EventEmitter {
     fields: Array<IField> = [];
 
     /**
+     * Stream object that corresponds to the last run query.
+     *
+     * It is `undefined` before the very first query.
+     */
+    stream: QueryStream;
+
+    /**
      * Generic query method, to be implemented in every derived class.
      */
     abstract query(text: string, values?: any[]): AsyncIterable<T>;
@@ -31,6 +38,7 @@ export abstract class QueryIterable<T> extends EventEmitter {
      * Patches a query stream to provide column information.
      */
     protected attachStream(qs: QueryStream): void {
+        this.stream = qs;
         this.fields.length = 0;
         const handler = qs.handleRowDescription;
         qs.handleRowDescription = (msg: { fields: IField[] }) => {
