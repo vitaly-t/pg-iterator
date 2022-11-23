@@ -1,6 +1,6 @@
 {
   "name": "pg-iterator",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "wrapper for pg-query-stream",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -37,9 +37,6 @@
   "homepage": "https://github.com/vitaly-t/pg-iterator",
   "dependencies": {
     "pg-query-stream": "4.2.4"
-  },
-  "peerDependencies": {
-    "pg-pool": "3.5.2"
   },
   "devDependencies": {
     "@types/node": "18.11.9",
