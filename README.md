@@ -32,7 +32,7 @@ import {QueryIterablePool} from 'pg-iterator';
 
 const pool = new Pool(/* connection config */);
 
-const q = new QueryIterablePool(pool); // creating our stream container
+const q = new QueryIterablePool(pool); // creating our Pool container
 
 const i = q.query('SELECT * FROM users WHERE id = $1', [123]);
 
@@ -52,7 +52,7 @@ import {QueryIterableClient} from 'pg-iterator';
 const pool = new Pool(/* connection config */);
 const client: Client = await pool.connect();
 
-const q = new QueryIterableClient(client); // creating our stream container
+const q = new QueryIterableClient(client); // creating our Client container
 
 const i = q.query('SELECT * FROM users WHERE id = $1', [123]);
 
@@ -67,6 +67,40 @@ When you do not know whether the source is a [Pool] or [Client], you can use fun
 which will check the type at run-time, and return either [QueryIterablePool] or [QueryIterableClient],
 which share generic [QueryIterable] protocol.
 
+### Fields information
+
+In every usage scenario, you end up with [QueryIterable] base interface, which exposes information about columns.
+
+* You can either access it after reading the very first row:
+
+```ts
+const q = new QueryIterablePool(pool);
+
+const i = q.query('SELECT * FROM users WHERE id = $1', [123]);
+
+for await(const u of i) {
+    const {fields} = q; // it is available at this point
+    
+    console.log(u); // output each row
+}
+```
+
+* Or you can get a notification event `fields` instead:
+
+```ts
+const q = new QueryIterablePool(pool);
+
+q.on('fields', fields => {
+    // sent with complete list of fields here,
+    // before the first row in the loop below
+});
+
+const i = q.query('SELECT * FROM users WHERE id = $1', [123]);
+
+for await(const u of i) {
+    console.log(u); // output each row
+}
+```
 
 [pg-query-stream]:https://www.npmjs.com/package/pg-query-stream
 
