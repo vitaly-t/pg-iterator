@@ -107,6 +107,17 @@ for await(const u of i) {
 }
 ```
 
+### Events
+
+Base interface [QueryIterable] can emit the following events:
+
+* `fields` - fields details, as explained above;
+* `error` - notification of an error thrown by the query;
+* `end` - notification of the query stream completion.
+
+Note that you handle errors where your iteration is, and these events are
+just for information purpose.
+
 [pg-query-stream]:https://www.npmjs.com/package/pg-query-stream
 
 [Pool]:https://node-postgres.com/apis/pool

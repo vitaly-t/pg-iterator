@@ -6,6 +6,11 @@ import {IField} from './types';
  * Base class for query-iterable protocol.
  *
  * Provides columns details (field descriptors) from a query stream.
+ *
+ * Supports the following events:
+ *  - `fields`: fields information for the current query is available;
+ *  - `error`: query execution threw an error;
+ *  - `end`: query streaming has finished.
  */
 export abstract class QueryIterable<T> extends EventEmitter {
 
@@ -13,7 +18,7 @@ export abstract class QueryIterable<T> extends EventEmitter {
      * Fields - column descriptors.
      *
      * Each new query resets the list, then re-populates it when you get the first row of data,
-     * plus emits event "fields" at the same time, so you can access it in either way.
+     * plus emits event `fields` at the same time, so you can access it in either way.
      */
     fields: Array<IField> = [];
 
