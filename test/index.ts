@@ -1,5 +1,5 @@
 import Pool from 'pg-pool';
-import {QueryIterablePool} from '../src';
+import {createQueryIterable, QueryIterablePool} from '../src';
 
 const cn = {
     database: 'pg-promise-demo',
@@ -10,7 +10,7 @@ const cn = {
 const pool = new Pool(cn);
 
 (async function () {
-    const q = new QueryIterablePool(pool);
+    const q = createQueryIterable(pool);
 
     let started;
 
