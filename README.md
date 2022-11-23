@@ -191,7 +191,7 @@ from(d).pipe(take(2)).subscribe({
     complete() {
         // since we use "take" above, the iteration will be incomplete,
         // and the connection will be stuck, so we have to force-release it: 
-        q.release(); 
+        q.release();
     }
 });
 ```
@@ -217,3 +217,5 @@ from(d).pipe(take(2)).subscribe({
 [RxJs]:https://github.com/ReactiveX/rxjs
 
 [iter-ops]:https://github.com/vitaly-t/iter-ops
+
+[pg-promise]:https://github.com/vitaly-t/pg-promise
