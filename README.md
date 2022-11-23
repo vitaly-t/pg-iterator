@@ -59,6 +59,9 @@ const i = q.query('SELECT * FROM users WHERE id = $1', [123]);
 for await(const u of i) {
     console.log(u); // output each row
 }
+
+// the onus is on you when to release the client and the pool when done:
+// client.release(), pool.end()
 ```
 
 ### Using unknown driver
