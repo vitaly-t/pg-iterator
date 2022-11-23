@@ -1,8 +1,6 @@
 import QueryStream from 'pg-query-stream';
-import TypedEmitter from 'emittery';
+import {EventEmitter} from 'events';
 import {IField} from './types';
-
-type QueryIterableEvents = { fields: Array<IField>, stream: QueryStream };
 
 /**
  * Base class for query-iterable protocol.
@@ -13,7 +11,7 @@ type QueryIterableEvents = { fields: Array<IField>, stream: QueryStream };
  *  - `fields`: provides details about fields from the query;
  *  - `stream`: notifies of a new stream is created.
  */
-export abstract class QueryIterable<T> extends TypedEmitter<QueryIterableEvents> {
+export abstract class QueryIterable<T> extends EventEmitter {
 
     /**
      * Fields - column descriptors.
@@ -38,13 +36,9 @@ export abstract class QueryIterable<T> extends TypedEmitter<QueryIterableEvents>
             handler(msg); // call the previous handler
             this.fields.push(...msg.fields); // clone-copy the fields
             qs.handleRowDescription = handler; // restore the handler
-            this.emitSafe('fields', this.fields);
+            this.emit('fields', this.fields);
         }
-        this.emitSafe('stream', qs);
-    }
-
-    private emitSafe<Name extends keyof QueryIterableEvents>(eventName: Name, eventData: QueryIterableEvents[Name]): void {
-        this.emit(eventName, eventData).catch();
+        this.emit('stream', qs);
     }
 
 }
