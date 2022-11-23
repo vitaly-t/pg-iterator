@@ -14,10 +14,10 @@ export class QueryIterablePool<T> extends QueryIterable<T> {
         this.attachStream(qs);
         const i: AsyncIterator<T> = qs[Symbol.asyncIterator]();
         let client: IClientLike;
-        qs.on('end', () => {
+        qs.once('end', () => {
             client.release();
         });
-        qs.on('error', () => {
+        qs.once('error', () => {
             client.release();
         });
         return {

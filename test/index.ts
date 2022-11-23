@@ -16,8 +16,8 @@ const pool = new Pool(cn);
 
 (async function () {
 
-    const client = await pool.connect();
-    const q = createQueryIterable<IUser>(client);
+    // const client = await pool.connect();
+    const q = createQueryIterable<IUser>(pool);
 
     let started;
 
@@ -26,10 +26,11 @@ const pool = new Pool(cn);
     });
 
     try {
+        // for await(const a of q.query('insert into users(id, name) values($1, $2)', [6, 'extra-1'])) {
         for await(const a of q.query('SELECT * FROM users')) {
             console.log(a);
         }
-        client.release();
+        // client.release();
     } catch (err) {
         console.log('HANDLED:', err);
     }
