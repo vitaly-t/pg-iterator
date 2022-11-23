@@ -3,7 +3,7 @@
 TypeScript wrapper for [pg-query-stream], to produce safe, strongly-typed `AsyncIterable`-s.
 
 It offers an asynchronous way to stream data, row-by-row, which you can handle either natively (via `for await`)
-or an iterable library of your choice, like RxJs etc.
+or an iterable library of your choice, like [RxJs] etc.
 
 ## Installation
 
@@ -85,7 +85,7 @@ const i = q.query('SELECT * FROM users WHERE id = $1', [123]);
 
 for await(const u of i) {
     const {fields} = q; // fields details are available at this point
-    
+
     console.log(u); // output each row
 }
 ```
@@ -114,6 +114,68 @@ Base interface [QueryIterable] can emit the following events:
 * `fields` - fields details, as explained above;
 * `stream` - notification of a new stream created.
 
+### Error handling
+
+This library manages connection and runs queries inside the same row iteration,
+so it's the only thing that can throw errors:
+
+```ts
+const q = new QueryIterablePool(pool);
+
+const i = q.query('SELECT * FROM users WHERE id = $1', [123]);
+
+try {
+    for await(const u of i) {
+        console.log(u); // output each row
+    }
+} catch (err) {
+    // all connection and query errors arrive here
+}
+```
+
+### Integration
+
+Most libraries that are based on [node-postgres] expose [Pool] and [Client] interfaces.
+
+For example, [pg-promise] exposes [Pool] via [Database.$pool], so you can do:
+
+```ts
+const q = new QueryIterablePool(db.$pool); // creating Pool container from Database object
+```
+
+And in terms of data consumption, since the data here is `AsyncIterable`, you have unlimited
+choice of libraries that can consume and process it nicely.
+
+* Example with [RxJs]:
+
+```ts
+import {from, take} from 'rxjs';
+
+const i = q.query('SELECT * FROM users WHERE id = $1', [123]);
+
+from(i).pipe(take(10)).subscribe(row => {
+    console.log(row);
+});
+```
+
+* Example with [iter-ops]:
+
+```ts
+import {pipe, take} from 'iter-ops';
+
+const i = q.query('SELECT * FROM users WHERE id = $1', [123]);
+
+const r = pipe(i, take(10));
+
+for await (const a of r) {
+    console.log(a); // up to 10 rows
+}
+```
+
+[Database.$pool]:http://vitaly-t.github.io/pg-promise/Database.html#$pool
+
+[node-postgres]:https://github.com/brianc/node-postgres
+
 [pg-query-stream]:https://www.npmjs.com/package/pg-query-stream
 
 [Pool]:https://node-postgres.com/apis/pool
@@ -127,3 +189,7 @@ Base interface [QueryIterable] can emit the following events:
 [createQueryIterable]:https://github.com/vitaly-t/pg-iterator/blob/main/src/auto.ts
 
 [QueryIterable]:https://github.com/vitaly-t/pg-iterator/blob/main/src/base.ts
+
+[RxJs]:https://github.com/ReactiveX/rxjs
+
+[iter-ops]:https://github.com/vitaly-t/iter-ops
