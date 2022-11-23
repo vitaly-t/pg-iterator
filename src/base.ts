@@ -2,7 +2,7 @@ import QueryStream from 'pg-query-stream';
 import TypedEmitter from 'emittery';
 import {IField} from './types';
 
-type QueryIterableEvents = { fields: IField[], stream: QueryStream };
+type QueryIterableEvents = { fields: Array<IField>, stream: QueryStream };
 
 /**
  * Base class for query-iterable protocol.
@@ -26,7 +26,7 @@ export abstract class QueryIterable<T> extends TypedEmitter<QueryIterableEvents>
     /**
      * Generic query method, to be implemented in every derived class.
      */
-    abstract query(text: string, values?: any[]): AsyncIterable<T>;
+    abstract query(text: string, values?: Array<any>): AsyncIterable<T>;
 
     /**
      * Patches a query stream to provide column information.

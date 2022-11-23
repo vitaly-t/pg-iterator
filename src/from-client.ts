@@ -12,7 +12,7 @@ export class QueryIterableClient<T> extends QueryIterable<T> {
         super();
     }
 
-    query(text: string, values?: any[]): AsyncIterable<T> {
+    query(text: string, values?: Array<any>): AsyncIterable<T> {
         const qs = new QueryStream(text, values, this.config);
         this.attachStream(qs);
         return this.client.query(qs);
