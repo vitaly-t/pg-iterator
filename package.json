@@ -1,12 +1,15 @@
 {
   "name": "pg-iterator",
-  "version": "1.0.0",
-  "description": "",
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
+  "version": "0.0.1-beta.0",
+  "description": "wrapper for pg-query-stream",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "files": [
+    "dist"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/vitaly-t/pg-iterator.git"

@@ -3,11 +3,14 @@
     "module": "commonjs",
     "target": "ES2020",
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "noEmit": false,
+    "declaration": true,
+    "declarationDir": "./dist",
+    "outDir": "./dist"
   },
   "include": [
-    "src/**/*.ts",
-    "test/**/*.ts"
+    "src/**/*.ts"
   ],
   "exclude": [
     "node_modules"
