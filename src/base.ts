@@ -3,9 +3,9 @@ import {TypedEmitter} from 'tiny-typed-emitter';
 import {IField} from './types';
 
 interface QueryIterableEvents {
-    'fields': (fields: IField[]) => void;
-    'stream': (stream: QueryStream) => void;
-    'complete': (forced: boolean) => void;
+    fields: (fields: IField[]) => void;
+    stream: (stream: QueryStream) => void;
+    complete: (forced: boolean) => void;
 }
 
 /**
