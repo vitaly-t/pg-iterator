@@ -19,6 +19,8 @@ via [createQueryIterable] function.
 Each of the interfaces - [QueryIterablePool], [QueryIterableClient] or [createQueryIterable] supports
 strong-type parametrization, for typed row iteration.
 
+See [complete examples].
+
 ### Using `Pool`
 
 When using an existing [Pool] object, this library will automatically acquire the connection,
@@ -207,7 +209,7 @@ function fromQuery<T>(qi: QueryIterable<T>, text: string, params?: any[]): Obser
 }
 ```
 
-See also: [complete examples](https://github.com/vitaly-t/pg-iterator/wiki/Examples).
+See also: [complete examples].
 
 [Database.$pool]:http://vitaly-t.github.io/pg-promise/Database.html#$pool
 
@@ -232,3 +234,5 @@ See also: [complete examples](https://github.com/vitaly-t/pg-iterator/wiki/Examp
 [iter-ops]:https://github.com/vitaly-t/iter-ops
 
 [pg-promise]:https://github.com/vitaly-t/pg-promise
+
+[complete examples]:https://github.com/vitaly-t/pg-iterator/wiki/Examples
