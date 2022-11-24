@@ -10,8 +10,7 @@ import {IField} from './types';
  * Supported events:
  *  - `fields`: provides details about fields from the query;
  *  - `stream`: notifies of a new stream created.
- *  - `complete`: notifies when the current query iteration is complete,
- *                or because the client forced release of connection.
+ *  - `complete`: notifies when the current query iteration is complete (or interrupted).
  */
 export abstract class QueryIterable<T> extends EventEmitter {
 

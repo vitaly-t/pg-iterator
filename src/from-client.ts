@@ -32,6 +32,10 @@ export class QueryIterableClient<T> extends QueryIterable<T> {
         qs.once('error', (err) => {
             this.complete(false);
         });
+        qs.once('close', (err) => {
+            // client called stream.destroy();
+            this.complete(true);
+        });
         this.attachStream(qs);
         return this.client.query(qs);
     }

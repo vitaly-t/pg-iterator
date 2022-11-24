@@ -38,6 +38,10 @@ export class QueryIterablePool<T> extends QueryIterable<T> {
         qs.once('error', (err) => {
             self.finish(false);
         });
+        qs.once('close', (err) => {
+            // client called stream.destroy();
+            self.finish(true);
+        });
         return {
             [Symbol.asyncIterator](): AsyncIterator<T> {
                 return {
