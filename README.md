@@ -2,8 +2,8 @@
 
 TypeScript wrapper for [pg-query-stream], to produce safe, strongly-typed `AsyncIterable`-s.
 
-It offers an asynchronous way to stream data, row-by-row, which you can handle either natively (via `for await`)
-or an iterable library of your choice, like [RxJs] etc.
+It offers an asynchronous way to stream data, row-by-row, which you can handle either natively (via `for await`),
+or a library of your choice, like [RxJs] etc.
 
 ## Installation
 
@@ -145,8 +145,8 @@ For example, [pg-promise] exposes [Pool] via [Database.$pool], so you can do:
 const q = new QueryIterablePool(db.$pool); // creating Pool container from Database object
 ```
 
-And in terms of data consumption, since the data here is `AsyncIterable`, you have unlimited
-choice of libraries that can consume and process it nicely.
+And in terms of data consumption, since the data here is `AsyncIterable`, there are many libraries
+that can consume and process it.
 
 * Example with [RxJs]:
 
