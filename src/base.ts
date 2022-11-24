@@ -1,6 +1,12 @@
 import QueryStream from 'pg-query-stream';
-import {EventEmitter} from 'events';
+import {TypedEmitter} from 'tiny-typed-emitter';
 import {IField} from './types';
+
+interface QueryIterableEvents {
+    'fields': (fields: IField[]) => void;
+    'stream': (stream: QueryStream) => void;
+    'complete': (forced: boolean) => void;
+}
 
 /**
  * Base class for query-iterable protocol.
@@ -12,7 +18,7 @@ import {IField} from './types';
  *  - `stream`: notifies of a new stream created.
  *  - `complete`: notifies when the current query iteration is complete (or interrupted).
  */
-export abstract class QueryIterable<T> extends EventEmitter {
+export abstract class QueryIterable<T> extends TypedEmitter<QueryIterableEvents> {
 
     /**
      * Fields - column descriptors.
