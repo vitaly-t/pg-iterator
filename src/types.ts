@@ -1,8 +1,7 @@
 export interface IQueryStreamConfig {
-    batchSize?: number
-    highWaterMark?: number
-    rowMode?: 'array'
-    types?: any
+    highWaterMark?: number // control over buffer memory
+    rowMode?: 'array' // to stream rows as arrays
+    types?: any // Types instance
 }
 
 export interface IField {
