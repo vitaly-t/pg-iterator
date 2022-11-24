@@ -207,6 +207,8 @@ function fromQuery<T>(qi: QueryIterable<T>, text: string, params?: any[]): Obser
 }
 ```
 
+See also: [complete examples](https://github.com/vitaly-t/pg-iterator/wiki/Examples).
+
 [Database.$pool]:http://vitaly-t.github.io/pg-promise/Database.html#$pool
 
 [node-postgres]:https://github.com/brianc/node-postgres
