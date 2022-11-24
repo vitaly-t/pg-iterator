@@ -17,8 +17,7 @@ export class QueryIterableClient<T> extends QueryIterable<T> {
      * because we use an external connection here.
      */
     release(): boolean {
-        this.complete(true);
-        return false;
+        return this.finish(true);
     }
 
     /**
@@ -27,16 +26,26 @@ export class QueryIterableClient<T> extends QueryIterable<T> {
     query(text: string, values?: Array<any>): AsyncIterable<T> {
         const qs = new QueryStream(text, values, this.config);
         qs.once('end', () => {
-            this.complete(false);
+            this.finish(false);
         });
         qs.once('error', (err) => {
-            this.complete(false);
+            this.finish(false);
         });
         qs.once('close', (err) => {
-            // client called stream.destroy();
-            this.complete(true);
+            this.finish(false);
         });
         this.attachStream(qs);
         return this.client.query(qs);
     }
+
+    private finish(forced: boolean): boolean {
+        const res = !!this.client;
+        if (this.client) {
+            this.client.release();
+            this.client = null;
+        }
+        this.complete(forced && res);
+        return res;
+    }
+
 }
