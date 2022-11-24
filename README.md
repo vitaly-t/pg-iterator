@@ -66,7 +66,7 @@ for await(const u of i) {
 // client.release(), pool.end()
 ```
 
-### Using unknown driver
+### Using dynamic driver
 
 When you do not know whether the source is a [Pool] or [Client], you can use function [createQueryIterable] instead,
 which will check the type at run-time, and return either [QueryIterablePool] or [QueryIterableClient],
