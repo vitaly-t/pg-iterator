@@ -9,7 +9,9 @@ import {IField} from './types';
  *
  * Supported events:
  *  - `fields`: provides details about fields from the query;
- *  - `stream`: notifies of a new stream is created.
+ *  - `stream`: notifies of a new stream created.
+ *  - `complete`: notifies when the current query iteration is complete,
+ *                or because the client forced release of connection.
  */
 export abstract class QueryIterable<T> extends EventEmitter {
 
@@ -22,12 +24,21 @@ export abstract class QueryIterable<T> extends EventEmitter {
     fields: Array<IField> = [];
 
     /**
+     * Stream instance used by the last/current query.
+     *
+     * It is `undefined` outside of query handling, and should be used with caution.
+     * A safe way to access it is by handling event `stream` instead.
+     */
+    stream?: QueryStream;
+
+    /**
      * Generic query method, to be implemented in every derived class.
      */
     abstract query(text: string, values?: Array<any>): AsyncIterable<T>;
 
     /**
-     * Forces release of the current connection.
+     * Forces release of the current connection, if it is possible,
+     * and return indication of whether it was released.
      */
     abstract release(): boolean;
 
@@ -46,4 +57,11 @@ export abstract class QueryIterable<T> extends EventEmitter {
         this.emit('stream', qs);
     }
 
+    /**
+     * Provides a query-completion notification.
+     */
+    protected complete(forced: boolean) {
+        this.emit('complete', forced);
+        this.stream = undefined;
+    }
 }

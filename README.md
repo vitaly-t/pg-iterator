@@ -111,8 +111,9 @@ for await(const u of i) {
 
 Base interface [QueryIterable] can emit the following events:
 
-* `fields` - fields details, as explained above;
-* `stream` - notification of a new stream created.
+* `fields` - fields details, as explained above; 
+* `stream` - notification of a new stream created;
+* `complete` - notification of completing the current query.
 
 ### Error handling
 

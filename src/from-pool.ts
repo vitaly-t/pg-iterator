@@ -5,7 +5,7 @@ import {IClientLike, IPoolLike} from './drivers';
 
 /**
  * Wraps a pg.Pool object, to automatically manage the connection,
- * execute queries against it, and produce strongly-typed AsyncIterable-s.
+ * executes queries against it, and produces strongly-typed AsyncIterable-s.
  */
 export class QueryIterablePool<T> extends QueryIterable<T> {
 
@@ -19,24 +19,24 @@ export class QueryIterablePool<T> extends QueryIterable<T> {
      * Forces release of the current connection.
      */
     release(): boolean {
-        if (this.client) {
-            this.client.release();
-            this.client = null;
-            return true;
-        }
-        return false;
+        return this.finish(true);
     }
 
+    /**
+     * - allocates connection from the pool;
+     * - runs the query;
+     * - releases connection when finished.
+     */
     query(text: string, values?: Array<any>): AsyncIterable<T> {
         const self = this;
         const qs = new QueryStream(text, values, self.config);
         this.attachStream(qs);
         const i: AsyncIterator<T> = qs[Symbol.asyncIterator]();
         qs.once('end', () => {
-            self.release();
+            self.finish(false);
         });
         qs.once('error', (err) => {
-            self.release();
+            self.finish(false);
         });
         return {
             [Symbol.asyncIterator](): AsyncIterator<T> {
@@ -51,5 +51,15 @@ export class QueryIterablePool<T> extends QueryIterable<T> {
                 };
             }
         };
+    }
+
+    private finish(forced: boolean): boolean {
+        const res = !!this.client;
+        if (this.client) {
+            this.client.release();
+            this.client = null;
+        }
+        this.complete(forced && res);
+        return res;
     }
 }
