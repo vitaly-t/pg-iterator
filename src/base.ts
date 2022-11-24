@@ -21,15 +21,17 @@ export abstract class QueryIterable<T> extends EventEmitter {
      * Each new query resets the list, then re-populates it when you get the first row of data,
      * plus emits event `fields` at the same time, so you can access it in either way.
      */
-    fields: Array<IField> = [];
+    readonly fields: Array<IField> = [];
 
     /**
-     * Stream instance used by the last/current query.
+     * Returns stream instance used by the last/current query.
      *
      * It is `undefined` outside of query handling, and should be used with caution.
      * A safe way to access it is by handling event `stream` instead.
      */
-    stream?: QueryStream;
+    get stream(): QueryStream | undefined {
+        return this._stream;
+    }
 
     /**
      * Generic query method, to be implemented in every derived class.
@@ -47,6 +49,7 @@ export abstract class QueryIterable<T> extends EventEmitter {
      */
     protected attachStream(qs: QueryStream): void {
         this.fields.length = 0;
+        this._stream = qs;
         const handler = qs.handleRowDescription;
         qs.handleRowDescription = (msg: { fields: IField[] }) => {
             handler(msg); // call the previous handler
@@ -61,7 +64,11 @@ export abstract class QueryIterable<T> extends EventEmitter {
      * Provides a query-completion notification.
      */
     protected complete(forced: boolean) {
-        this.emit('complete', forced);
-        this.stream = undefined;
+        if (this.stream) {
+            this.emit('complete', forced);
+            this._stream = undefined;
+        }
     }
+
+    private _stream?: QueryStream;
 }
