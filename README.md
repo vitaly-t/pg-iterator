@@ -113,14 +113,13 @@ for await(const u of i) {
 
 Base interface [QueryIterable] can emit the following events:
 
-* `fields` - fields details, as explained above; 
+* `fields` - fields details, as explained above;
 * `stream` - notification of a new stream created;
 * `complete` - notification of completing the current query.
 
 ### Error handling
 
-This library manages connection and runs queries inside the same row iteration,
-so it's the only thing that can throw errors:
+This library manages connection and runs queries inside the same row iteration, the only thing that can throw errors:
 
 ```ts
 const q = new QueryIterablePool(pool);
