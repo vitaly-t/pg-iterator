@@ -1,7 +1,7 @@
 import QueryStream from 'pg-query-stream';
 
 export interface IClientLike {
-    query<T>(qs: QueryStream): QueryStream;
+    query(qs: QueryStream): QueryStream;
 
     release();
 }
