@@ -2,12 +2,13 @@
 
 TypeScript wrapper for [pg-query-stream], which adds the following:
 
-* Produces `AsyncIterable`, to process data row-by-row, with `for await` or a library of your choice (like [RxJs]).
+* Produces a safe `AsyncIterable`, for row-by-row processing, with `for await` or a library (like [RxJs]).
 * The library is strongly-typed throughout: you can optionally specify row entity types for your queries. 
-* Auto-connects [Pool] on the first-row iteration (disconnects on last) - no need connecting outside streaming.
+* Auto-connects [Pool] on the first-row iteration (disconnects on last) - internal connection management.
 * Unifies error handling for queries and connections - initial, interrupted or lost / broken.
 * Offers one protocol for working with [Client] or [Pool] objects.
-
+* Provides workarounds for some issues in [pg-query-stream] - missing fields, [issue #2870](https://github.com/brianc/node-postgres/issues/2870), etc. 
+ 
 ## Installation
 
 ```

@@ -36,7 +36,10 @@ export class QueryIterableClient<T> extends QueryIterable<T> {
         qs.once('close', (err) => {
             self.finish(false);
         });
-        let r;
+        let r; // rejection callback;
+
+        // see issue: https://github.com/brianc/node-postgres/issues/2870
+        // we use AbortController to prevent iteration lock on disconnection;
         const ctrl = new AbortController();
         const abortListener = () => {
             r && r(ctrl.signal.reason);

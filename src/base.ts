@@ -2,6 +2,9 @@ import QueryStream from 'pg-query-stream';
 import {TypedEmitter} from 'tiny-typed-emitter';
 import {IField} from './types';
 
+/**
+ * Events supported by class QueryIterable.
+ */
 interface QueryIterableEvents {
     fields: (fields: IField[]) => void;
     stream: (stream: QueryStream) => void;
