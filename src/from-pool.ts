@@ -46,7 +46,7 @@ export class QueryIterablePool<T> extends QueryIterable<T> {
         const ctrl = new AbortController();
         const abortListener = () => {
             r && r(ctrl.signal.reason);
-            self.finish(true); // connection broken
+            self.finish(true); // lost connection
         };
         ctrl.signal.addEventListener('abort', abortListener, {once: true});
         return {

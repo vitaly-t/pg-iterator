@@ -24,18 +24,46 @@ export class QueryIterableClient<T> extends QueryIterable<T> {
      * Runs a query against specified Client object.
      */
     query(text: string, values?: Array<any>): AsyncIterable<T> {
+        const self = this;
         const qs = new QueryStream(text, values, this.config);
+        const i: AsyncIterator<T> = qs[Symbol.asyncIterator]();
         qs.once('end', () => {
-            this.finish(false);
+            self.finish(false);
         });
         qs.once('error', (err) => {
-            this.finish(false);
+            self.finish(false);
         });
         qs.once('close', (err) => {
-            this.finish(false);
+            self.finish(false);
+        });
+        let r;
+        const ctrl = new AbortController();
+        const abortListener = () => {
+            r && r(ctrl.signal.reason);
+            self.finish(true); // lost connection
+        };
+        ctrl.signal.addEventListener('abort', abortListener, {once: true});
+        this.client.on('error', err => {
+            ctrl.abort(err);
         });
         this.attachStream(qs);
-        return this.client.query(qs);
+        return {
+            [Symbol.asyncIterator](): AsyncIterator<T> {
+                let started;
+                return {
+                    next(): Promise<IteratorResult<T>> {
+                        if (!started) {
+                            self.client.query(qs);
+                            started = true;
+                        }
+                        return new Promise((resolve, reject) => {
+                            r = reject;
+                            i.next().then(resolve, reject);
+                        });
+                    }
+                };
+            }
+        };
     }
 
     private finish(forced: boolean): boolean {
