@@ -1,9 +1,12 @@
 # pg-iterator
 
-TypeScript wrapper for [pg-query-stream], to produce safe, strongly-typed `AsyncIterable`-s.
+TypeScript wrapper for [pg-query-stream], which adds the following:
 
-It offers an asynchronous way to stream data, row-by-row, which you can handle either natively (via `for await`),
-or a library of your choice, like [RxJs] etc.
+* Produces `AsyncIterable`, to process data row-by-row, with `for await` or a library of your choice, like [RxJs] etc.
+* The library is strongly-typed throughout: you can optionally specify row entity types for your queries. 
+* Automatically connects [Pool] on the first-row iteration (disconnects on last) - no need connecting outside streaming.
+* Unifies error handling for queries and connections - initial, interrupted or lost / broken.
+* Offers one protocol for working with [Client] or [Pool] objects.
 
 ## Installation
 
