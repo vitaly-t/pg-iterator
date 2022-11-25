@@ -42,14 +42,30 @@ export class QueryIterablePool<T> extends QueryIterable<T> {
             // client called stream.destroy();
             self.finish(true);
         });
+        let r;
+        const ctrl = new AbortController();
+        const abortListener = () => {
+            r && r(ctrl.signal.reason);
+            self.finish(true); // connection broken
+        };
+        ctrl.signal.addEventListener('abort', abortListener, {once: true});
         return {
             [Symbol.asyncIterator](): AsyncIterator<T> {
                 return {
                     next(): Promise<IteratorResult<T>> {
-                        return self.client ? i.next() : self.pool.connect().then(c => {
+                        if (self.client) {
+                            return new Promise((resolve, reject) => {
+                                r = reject;
+                                i.next().then(resolve, reject);
+                            });
+                        }
+                        return self.pool.connect().then(c => {
+                            c.on('error', (err) => {
+                                ctrl.abort(err);
+                            });
                             self.client = c;
                             c.query(qs);
-                            return i.next();
+                            return this.next();
                         });
                     }
                 };
