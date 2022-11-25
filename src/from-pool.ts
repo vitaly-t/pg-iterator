@@ -64,7 +64,7 @@ export class QueryIterablePool<T> extends QueryIterable<T> {
                         }
                         return self.pool.connect().then(c => {
                             c.on('error', (err) => {
-                                ctrl.abort(err);
+                                ctrl.abort(err); // abort a stuck stream
                             });
                             self.client = c;
                             c.query(qs);

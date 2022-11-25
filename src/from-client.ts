@@ -47,7 +47,7 @@ export class QueryIterableClient<T> extends QueryIterable<T> {
         };
         ctrl.signal.addEventListener('abort', abortListener, {once: true});
         this.client.on('error', err => {
-            ctrl.abort(err);
+            ctrl.abort(err); // abort a stuck stream
         });
         this.attachStream(qs);
         return {
