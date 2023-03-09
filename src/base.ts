@@ -12,6 +12,11 @@ interface QueryIterableEvents {
 }
 
 /**
+ * Cleanup function type
+ */
+type CleanupFn = () => void;
+
+/**
  * Base class for query-iterable protocol.
  *
  * Provides columns details (field descriptors) from a query stream.
@@ -30,6 +35,12 @@ export abstract class QueryIterable<T> extends TypedEmitter<QueryIterableEvents>
      * plus emits event `fields` at the same time, so you can access it in either way.
      */
     readonly fields: Array<IField> = [];
+
+    /**
+     * Stores cleanup functions that are called on finish.
+     * E.g. to remove event listeners to avoid memory leak.
+     */
+    private finishCleanupFunctions: CleanupFn[] = [];
 
     /**
      * Returns stream instance used by the last/current query.
@@ -76,6 +87,23 @@ export abstract class QueryIterable<T> extends TypedEmitter<QueryIterableEvents>
             this.emit('complete', forced);
             this._stream = undefined;
         }
+    }
+
+    /**
+     * Subclasses can register cleanup functions to be called on finish
+     */
+    protected registerFinishCleanup(fn: CleanupFn) {
+        this.finishCleanupFunctions.push(fn);
+    }
+
+    /**
+     * Runs cleanup functions and resets finishCleanupFunctions
+     */
+    protected finishCleanup() {
+        this.finishCleanupFunctions.forEach((fn) => {
+            fn();
+        });
+        this.finishCleanupFunctions.length = 0;
     }
 
     private _stream?: QueryStream;
