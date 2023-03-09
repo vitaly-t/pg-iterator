@@ -46,9 +46,14 @@ export class QueryIterableClient<T> extends QueryIterable<T> {
             self.finish(true); // lost connection
         };
         ctrl.signal.addEventListener('abort', abortListener, {once: true});
-        this.client.on('error', err => {
+        function errorListener(err: any) {
             ctrl.abort(err); // abort a stuck stream
+        }
+        const c = this.client;
+        this.registerFinishCleanup(() => {
+            c.removeListener('error', errorListener);
         });
+        this.client.on('error', errorListener);
         this.attachStream(qs);
         return {
             [Symbol.asyncIterator](): AsyncIterator<T> {
@@ -70,6 +75,7 @@ export class QueryIterableClient<T> extends QueryIterable<T> {
     }
 
     private finish(forced: boolean): boolean {
+        this.finishCleanup();
         const res = !!this.client;
         if (this.client) {
             this.client.release();

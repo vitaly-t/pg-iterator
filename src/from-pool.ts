@@ -14,7 +14,6 @@ export class QueryIterablePool<T> extends QueryIterable<T> {
     }
 
     private client: IClientLike;
-    private cleanupListeners: (() => void)[] = [];
 
     /**
      * Forces release of the current connection.
@@ -67,9 +66,9 @@ export class QueryIterablePool<T> extends QueryIterable<T> {
                             function errorListener(err: any) {
                                 ctrl.abort(err); // abort a stuck stream
                             }
-                            self.cleanupListeners.push(() => {
+                            self.registerFinishCleanup(() => {
                                 c.removeListener('error', errorListener);
-                            });
+                            })
                             c.on('error', errorListener);
                             self.client = c;
                             c.query(qs);
@@ -82,12 +81,9 @@ export class QueryIterablePool<T> extends QueryIterable<T> {
     }
 
     private finish(forced: boolean): boolean {
+        this.finishCleanup();
         const res = !!this.client;
         if (this.client) {
-            for (const fn of this.cleanupListeners) {
-                fn();
-            }
-            this.cleanupListeners.length = 0;
             this.client.release();
             this.client = null;
         }
