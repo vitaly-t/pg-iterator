@@ -56,6 +56,9 @@ export class QueryIterablePool<T> extends QueryIterable<T> {
             [Symbol.asyncIterator](): AsyncIterator<T> {
                 return {
                     next(): Promise<IteratorResult<T>> {
+                        if (ctrl.signal.aborted) {
+                            return Promise.resolve({ value: undefined, done: true });
+                        }
                         if (self.client) {
                             return new Promise((resolve, reject) => {
                                 r = reject;
@@ -74,7 +77,11 @@ export class QueryIterablePool<T> extends QueryIterable<T> {
                             c.query(qs);
                             return this.next();
                         });
-                    }
+                    },
+                    return() {
+                        ctrl.abort();
+                        return Promise.resolve({ value: undefined, done: true });
+                    },
                 };
             }
         };

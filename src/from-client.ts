@@ -60,6 +60,9 @@ export class QueryIterableClient<T> extends QueryIterable<T> {
                 let started;
                 return {
                     next(): Promise<IteratorResult<T>> {
+                        if (ctrl.signal.aborted) {
+                            return Promise.resolve({ value: undefined, done: true });
+                        }
                         if (!started) {
                             self.client.query(qs);
                             started = true;
@@ -68,7 +71,11 @@ export class QueryIterableClient<T> extends QueryIterable<T> {
                             r = reject;
                             i.next().then(resolve, reject);
                         });
-                    }
+                    },
+                    return() {
+                        ctrl.abort();
+                        return Promise.resolve({ value: undefined, done: true });
+                    },
                 };
             }
         };
