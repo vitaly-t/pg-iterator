@@ -1,5 +1,7 @@
 # pg-iterator
 
+## WARNING: This library was never really finsihed, and currently abandoned.
+
 TypeScript wrapper for [pg-query-stream], which adds the following:
 
 * Produces a safe `AsyncIterable`, for row-by-row processing, with `for await` or a library (like [RxJs]).
